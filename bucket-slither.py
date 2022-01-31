@@ -26,6 +26,19 @@ class slither():
         #check how we are getting bucket names
         if args.domain is not None:
             hosts = args.domain
+            url1 = f"http://{hosts}.s3.amazonaws.com/"
+            url2 = f"http://s3.amazonaws.com/{hosts}"
+            r = requests.get(url1)
+            r2= requests.get(url2)
+            data = r.status_code
+            data2 = r2.status_code
+            print(url1)
+            print(f"Response: {data}\n")
+            print(url2)
+            print (f"Response: {data2}\n")
+            r.close()
+            r2.close()
+            return data, data2
         elif  args.file is not None:
             host = args.file
             with open(host) as f:
