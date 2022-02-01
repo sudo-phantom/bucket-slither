@@ -33,10 +33,6 @@ class slither():
             data = r.status_code
             r.close()
             data2 = r2.status_code
-            '''print(url1)
-            print(f"Response: {data}\n")
-            print(url2)
-            print (f"Response: {data2}\n")'''
             r2.close()
             return f"{url1}: {data}\n {url2}: {data2}"
         elif  args.file is not None:
@@ -58,11 +54,18 @@ class slither():
 
                     print(results)
 
-
+        elif args.output is not None:
+            slither.logging()
         else:
             print('Bucket name argument not set')
             os.error
-        output = args.output
+            
+
+        def logging():
+            output = args.output
+            file = output
+            file.write(slither.get_data(), "w")
+            #logging not working, creating issue
 
         
 
