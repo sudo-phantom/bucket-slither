@@ -31,36 +31,32 @@ class slither():
             r = requests.get(url1)
             r2= requests.get(url2)
             data = r.status_code
+            r.close()
             data2 = r2.status_code
-            print(url1)
+            '''print(url1)
             print(f"Response: {data}\n")
             print(url2)
-            print (f"Response: {data2}\n")
-            r.close()
+            print (f"Response: {data2}\n")'''
             r2.close()
-            return data, data2
+            return f"{url1}: {data}\n {url2}: {data2}"
         elif  args.file is not None:
             host = args.file
-            with open(host) as f:
+            datas = []
+            with open(f"{host}", "r") as f:
                 lines = f.readlines()
-                for hosts in lines:
-                    hosts = hosts.rstrip("\n")
-                    print(f"Checking: {hosts}")
-                    url1 = f"http://{hosts}.s3.amazonaws.com/"
-                    url2 = f"http://s3.amazonaws.com/{hosts}"
-                    
-                   
+                for line in lines:
+                    line = line.rstrip('\n')
+                    print(line)
+                    url1 = f"http://{line}.s3.amazonaws.com"
+                    url2 = f"http://s3.amazonaws.com/{line}"
                     r = requests.get(url1)
-                    r2= requests.get(url2)
+                    r2 = requests.get(url2)
                     data = r.status_code
                     data2 = r2.status_code
-                    print(url1)
-                    print(f"Response: {data}\n")
-                    print(url2)
-                    print (f"Response: {data2}\n")
-                    r.close()
-                    r2.close()
-                    return data, data2
+
+                    results = {url1: data, url2: data2}
+
+                    print(results)
 
 
         else:
