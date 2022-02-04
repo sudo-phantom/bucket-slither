@@ -40,11 +40,14 @@ class slither():
             r.close()
             data2 = r2.status_code
             r2.close()
-            datas = (url1, data, url2, data2)
-            #print(datas)
+            datas = (f"url1:{url1} respone:{data}, url2:{url2} Response:{data2}")
+            if args.output is not None:
+                slither.logging(datas, hosts)
+            
             if args.directory is not None:
                 slither.directory(url1, url2)
-            return  url1, data,  url2, data2
+            print(datas)
+            return  datas
         '''check file contents'''
         if args.file is not None:
             host = args.file
@@ -52,7 +55,7 @@ class slither():
             with open(f"{host}", "r") as f:
                 lines = f.readlines()
                 for line in lines:
-                    line = line.rstrip('\n')
+                    line = line.strip()
                     url1 = f"http://{line}.s3.amazonaws.com"
                     url2 = f"http://s3.amazonaws.com/{line}"
                     r = requests.get(url1)
@@ -60,14 +63,20 @@ class slither():
                     r2 = requests.get(url2)
                     data = r.status_code
                     data2 = r2.status_code
-                    datas.append(f"{url1}: {data}, {url2}: {data2},")
-                    #print(datas)
-                if args.directory is not None:
-                    slither.directory(url1, url2)
-                r.close()
-                r2.close()
-                print(f"{url1} \t: {data},\n {url2} \t: {data2}\n")
-        
+                    r.close()
+                    r2.close()
+                    datas.append(f"url1{url1}: {data} url2:{url2}: response:{data2}")
+      
+                    if args.output is not None:
+                        slither.logging(datas, line)
+                    if args.directory is not None:
+                        slither.directory(url1, url2)
+                        
+                        datas.append(f"{url1} : {data}, {url2} : {data2}")
+        print (datas)
+        return datas
+                        
+                
                          
         
         
@@ -86,31 +95,27 @@ class slither():
                 d_r2 = requests.get(url_2)
                 d_data = d_r.status_code
                 d_data2 = d_r2.status_code
-                print(f"{url_1} \t: {d_data},\n {url_2} \t: {d_data2}\n")
+                print(f"{url_1}: {d_data},\n {url_2}: {d_data2}\n")
 
-            dir_data.append(f"{url_1}: {d_data} ,")
-            dir_data.append(f"{url_2}: {d_data2},")
+                dir_data.append(f"url1:{url_1}: response:{d_data} ,")
+                dir_data.append(f"url2:{url_2}: response:{d_data2},")
+                if args.output is not None:
+                    slither.logging(dir_data, d_line)
 
-            d_r.close()
-            d_r2.close()
-            return(dir_data)
+                d_r.close()
+                d_r2.close()
+                print(f"Directory DATA----\n{dir_data}\n----\n")
 
-        '''elif args.output is not None:
-            #slither.logging()
-            print("output not availible in this verisn yet")
-        else:
-            print('Bucket name argument not set')
-            os.error
-            
-
-        def logging():
+    def logging(logs, filename):
+        if args.output is not None:
             output = args.output
-            file = output
-            file.write(slither.get_data(), "w")
-            #logging not working, creating issue
-'''
-        
-#print(f"{slither.get_data()}")
+            file = f"{output}.log"
+            with open(file, 'a')as f:
+                f.writelines(f" {str(filename)}, {str(logs)} \n")
+                f.close
+      
+            
+        #logging not working, creating issue
 
 if __name__ == '__main__':
     slither.get_data()
