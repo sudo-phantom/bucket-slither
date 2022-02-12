@@ -1,9 +1,9 @@
 Python tool to automate the process of looking to see if a aws bucket is public
 
 
-
+```
 usage: bucket-slither.py [-h] [-b BUCKET] [-d DIRECTORY] [-f FILE] [-o OUTPUT]
-
+```
 Public Bucket Discovery tool.
 
 OPTIONS:
